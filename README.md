@@ -1,43 +1,123 @@
-# Casino Chat Buddy
+# LiveChat Support Dashboard
 
-Start here: GETTING_STARTED.md
+A Node.js customer-support dashboard for managing LiveChat conversations, support teams, groups and AI-assisted response workflows.
 
-- What it is: A simple dashboard for Owners, Masters, and Agents to manage groups, live chat, promotions, and per‑group AI settings.
-- Who should read the guide: Everyone. It explains roles, how to log in, switch groups (default is All Groups), manage teams, and use live chat.
+This project explores how support operations can be brought into a single interface with role-based access, real-time messaging and configurable automation.
 
-Files of interest
-- GETTING_STARTED.md — Beginner-friendly guide with step-by-step tasks per role.
-- server2.js — Express API server (primary entrypoint).
-- newtest4.html — Web dashboard UI.
+## Features
 
-Quick start (PAT-only, Windows PowerShell)
-- Set env vars in your PowerShell session:
-	- `$env:LIVECHAT_PAT = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("<ACCOUNT_ID>:<PAT_TOKEN>"))`
-	- `$env:DISABLE_LIVECHAT_WEBHOOK = "true"`
-- Run from the `finished` folder:
-	- `cd finished; npm install; npm run server`
-- Configure a group’s LiveChat License/Group/Widget in Admin > Group Config, then use the Live Chat tab.
+- LiveChat conversation management
+- Real-time customer messaging
+- Support groups and team management
+- Owner, administrator and agent roles
+- Group-specific configuration
+- AI-assisted customer responses
+- Promotion and content management
+- Configurable automated bot behavior
+- Webhook-based LiveChat integration
+- Manual agent replies
+- Message history and conversation state
+- Monitoring hooks for bot and webhook events
+- Authentication and access controls
+- Local persistence for development
 
-Standalone webhook bot
-- Purpose: Receive LiveChat webhooks and answer with the standalone AI brain without running the dashboard server.
-- Requirements: Set `LIVECHAT_WEBHOOK_SECRET`, `LIVECHAT_CLIENT_ID`, and AI/OpenAI env vars (see `GETTING_STARTED.md`). Optional: `BOT_SECRET` to protect `/agent/send`.
-- Run from the `finished` folder: `npm run livechat:webhook-bot`
-- Exposes `POST /livechat/webhook` (processes `incoming_event` & `incoming_rich_message` only) and `POST /agent/send` (manual replies), plus `GET /health`.
-- Webhook signatures are validated with `LIVECHAT_WEBHOOK_SECRET` and duplicate/looped events are ignored.
-- Optional monitoring: hook into lifecycle events via `require('./monitoring-hooks')` to track inbound/outbound traffic and errors.
+## Architecture
 
-Need help?
-Open GETTING_STARTED.md first. If something looks off in the UI, refresh your browser and make sure the server is running.
+The application uses an Express backend that coordinates:
 
-Monitoring hooks
-- Module: `monitoring-hooks.js`
-- Events exposed (`EVENTS`): `webhook.received`, `chat.opened`, `message.inbound`, `ai.response`, `livechat.send_success`, `livechat.send_failure`, `message.skipped`, `webhook.unauthorized`, `bot.error`.
-- Usage example:
-	```js
-	const { EVENTS, registerHook } = require('./monitoring-hooks');
+- LiveChat API communication
+- webhook processing
+- support group configuration
+- authentication and permissions
+- AI-assisted responses
+- conversation persistence
+- real-time messaging
 
-	registerHook(EVENTS.INBOUND_MESSAGE, ({ chatId, text }) => {
-		console.log('[monitor] inbound', chatId, text);
-	});
-	```
-- Hooks never crash the bot: handler errors are caught and logged.
+The browser-based dashboard provides the operational interface for support teams.
+
+## Technology
+
+- Node.js
+- Express.js
+- JavaScript
+- WebSockets
+- LiveChat APIs
+- REST APIs
+- OpenAI API integration
+- SQLite
+- MongoDB / Mongoose
+- JSON Web Tokens
+- bcrypt
+
+## Main Components
+
+`server2.js`  
+Primary Express application and API server.
+
+`newtest4.html`  
+Support dashboard interface.
+
+`livechat-webhook-bot.js`  
+Webhook-driven LiveChat automation service.
+
+`livechat-group-helpers.js`  
+Utilities for mapping conversations and support groups.
+
+`monitoring-hooks.js`  
+Event hooks for observing inbound messages, AI responses, delivery results and bot errors.
+
+## Webhook Events
+
+The monitoring layer supports events such as:
+
+- webhook received
+- chat opened
+- inbound message
+- AI response generated
+- LiveChat message sent
+- message delivery failure
+- skipped message
+- unauthorized webhook
+- bot error
+
+Monitoring handlers are isolated so failures in monitoring code do not interrupt normal message processing.
+
+## Local Development
+
+Install dependencies:
+
+`npm install`
+
+Start the primary server:
+
+`npm run server`
+
+The project also contains development, webhook diagnostics and bot-testing scripts in `package.json`.
+
+## Configuration
+
+Runtime credentials and configuration should be supplied through environment variables.
+
+Examples include:
+
+- LiveChat authentication
+- webhook secrets
+- AI provider configuration
+- application secrets
+- support group settings
+
+Never commit production API keys, access tokens or webhook secrets to the repository.
+
+## Project Background
+
+This repository represents an earlier standalone support-dashboard implementation developed while exploring LiveChat integrations, support automation and multi-team messaging.
+
+The larger customer-support platform work is documented separately in the LiveChat Pro showcase:
+
+https://github.com/benjihub/livechat-pro-showcase
+
+## Status
+
+Portfolio and development reference.
+
+The repository remains public to demonstrate the Node.js, API-integration, real-time messaging and support-automation work behind the project.
